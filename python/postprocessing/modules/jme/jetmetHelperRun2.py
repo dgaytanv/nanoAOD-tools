@@ -19,9 +19,27 @@ jecTagsMC = {
     'UL2018': 'Summer19UL18_V5_MC',
     '2022': 'Summer22_22Sep2023_V2_MC',
     '2022EE': 'Summer22EE_22Sep2023_V2_MC',
+    '2023': 'Summer23Prompt23_V1_MC',
+    '2023BPix': 'Summer23BPixPrompt23_V1_MC',
+}
+
+# https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution for run2ul
+jerTagsMC = {
+    '2016': 'Summer16_25nsV1_MC',
+    '2017': 'Fall17_V3_MC',
+    '2018': 'Autumn18_V7b_MC',
+    'UL2016_preVFP': 'Summer20UL16APV_JRV3_MC',
+    'UL2016': 'Summer20UL16_JRV3_MC',
+    'UL2017': 'Summer19UL17_JRV2_MC',
+    'UL2018': 'Summer19UL18_JRV2_MC',
+    '2022': 'Summer22_22Sep2023_JRV1_MC',
+    '2022EE': 'Summer22EE_22Sep2023_JRV1_MC',
+    '2023': 'Summer23Prompt23_RunCv1234_JRV1_MC',
+    '2023BPix': 'Summer23BPixPrompt23_RunD_JRV1_MC',
 }
 
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/JECDataMC#Recommended_for_Data
+comment_out="""
 __archiveTagsDATA = {
     '2016': 'Summer16_07Aug2017_V11_DATA',
     '2017': 'Fall17_17Nov2017_V32_DATA',
@@ -31,8 +49,10 @@ __archiveTagsDATA = {
     'UL2017': 'Summer19UL17_V5_DATA',
     'UL2018': 'Summer19UL18_V5_DATA'
 }
+"""
 
 # https://cms-jerc.web.cern.ch/Recommendations/#run-3 for run3
+# NOT NEEDED: data/mc in nanoaod has JEC applied already. we only need JEC for mc for syst variations.
 jecTagsDATA = {
     '2016B': 'Summer16_07Aug2017BCD_V11_DATA',
     '2016C': 'Summer16_07Aug2017BCD_V11_DATA',
@@ -75,21 +95,11 @@ jecTagsDATA = {
 }
 
 
-# https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution for run2ul
-jerTagsMC = {
-    '2016': 'Summer16_25nsV1_MC',
-    '2017': 'Fall17_V3_MC',
-    '2018': 'Autumn18_V7b_MC',
-    'UL2016_preVFP': 'Summer20UL16APV_JRV3_MC',
-    'UL2016': 'Summer20UL16_JRV3_MC',
-    'UL2017': 'Summer19UL17_JRV2_MC',
-    'UL2018': 'Summer19UL18_JRV2_MC',
-    '2022': 'Summer22_22Sep2023_JRV1_MC',
-    '2022EE': 'Summer22EE_22Sep2023_JRV1_MC'
-}
+
 
 # jet mass resolution: https://twiki.cern.ch/twiki/bin/view/CMS/JetWtagging
 #nominal, up, down
+comment_out="""
 jmrValues = {
     '2016': [1.0, 1.2, 0.8],
     '2017': [1.09, 1.14, 1.04],
@@ -100,10 +110,12 @@ jmrValues = {
     'UL2017': [1.00, 1.00, 1.00],  # placeholder
     'UL2018': [1.00, 1.00, 1.00],  # placeholder
 }
+"""
 
 # jet mass scale
 # W-tagging PUPPI softdrop JMS values: https://twiki.cern.ch/twiki/bin/view/CMS/JetWtagging
 # 2016 values
+comment_out="""
 jmsValues = {
     '2016': [1.00, 0.9906, 1.0094],  # nominal, down, up
     '2017': [0.982, 0.978, 0.986],
@@ -113,7 +125,8 @@ jmsValues = {
     'UL2016': [1.000, 1.000, 1.000],  # placeholder
     'UL2017': [1.000, 1.000, 1.000],  # placeholder
     'UL2018': [1.000, 1.000, 1.000],  # placeholder
-}   
+}
+"""
 
 
 def createJMECorrector(isMC=True,
@@ -134,7 +147,10 @@ def createJMECorrector(isMC=True,
                "UL2017":"2017_UL",
                "UL2018":"2018_UL",
                "2022": "2022_Summer22",
-               "2022EE": "2022_Summer22EE"}
+               "2022EE": "2022_Summer22EE",
+               "2023": "2023_Summer23",
+               "2023BPix": "2023_Summer23BPix",
+              }
 
     if isMC:
         jecTag_ = jecTagsMC[dataYear]

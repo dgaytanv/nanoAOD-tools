@@ -21,7 +21,9 @@ class btagSFProducer(Module):
                    "UL2018":"2018_UL",
                   #PRELIMINARY
                    "2022":"2022_Summer22",
-                   "2022EE":"2022_Summer22EE"}
+                   "2022EE":"2022_Summer22EE",
+                   "2023":"2023_Summer23",
+                   "2023BPix":"2023_Summer23BPix"}
         
         if era.startswith("UL"):
             self.run = 2
@@ -168,7 +170,8 @@ btagSF2017_UL = lambda: btagSFProducer("UL2017")
 btagSF2018_UL = lambda: btagSFProducer("UL2018")
 btagSF2022 = lambda: btagSFProducer("2022")
 btagSF2022EE = lambda: btagSFProducer("2022EE")
-                    
+btagSF2023 = lambda: btagSFProducer("2023")  
+btagSF2023BPix = lambda: btagSFProducer("2023BPix")
                 
                 
                 

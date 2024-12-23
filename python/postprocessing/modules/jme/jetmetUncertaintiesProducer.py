@@ -421,6 +421,7 @@ class jetmetUncertaintiesProducer(Module):
 
             (jet_pt, jet_mass) = self.jetReCalibrator.correct(jet, rho)
             (jet_pt_l1, jet_mass_l1) = self.jetReCalibratorL1.correct(jet, rho)
+            #print(f'JEC {jet.pt} -> {jet_pt}')
             jet.pt = jet_pt
             jet.mass = jet_mass
 
@@ -923,6 +924,12 @@ jetmetUncertainties2018AK4Puppi = lambda: jetmetUncertaintiesProducer(
 jetmetUncertainties2018AK4PuppiAll = lambda: jetmetUncertaintiesProducer(
     "2018", "Autumn18_V8_MC", ["All"], jetType="AK4PFPuppi")
 
+jetmetUncertaintiesUL2017 = lambda: jetmetUncertaintiesProducer(
+    "2017_UL", "Summer19UL17_V5_MC", jerTag="Summer19UL17_JRV2_MC")
+
+jetmetUncertaintiesUL2017_fj = lambda: jetmetUncertaintiesProducer(
+    "2017_UL", "Summer19UL17_V5_MC", jerTag="Summer19UL17_JRV2_MC", jetType="AK8PFPuppi")
+
 jetmetUncertaintiesUL2018 = lambda: jetmetUncertaintiesProducer(
     "2018_UL", "Summer19UL18_V5_MC", jerTag="Summer19UL18_JRV2_MC")
 
@@ -934,3 +941,15 @@ jetmetUncertaintiesUL2022 = lambda: jetmetUncertaintiesProducer(
 
 jetmetUncertaintiesUL2022_fj = lambda: jetmetUncertaintiesProducer(
     "2022_Summer22", "Summer22_22Sep2023_V2_MC", jerTag="Summer22_22Sep2023_JRV1_MC", jetType="AK8PFPuppi")
+
+jetmetUncertaintiesUL2023 = lambda: jetmetUncertaintiesProducer(
+    "2023_Summer23", "Summer23Prompt23_V1_MC", jerTag="Summer23Prompt23_RunCv1234_JRV1_MC", jetType="AK4PFPuppi")
+
+jetmetUncertaintiesUL2023_fj = lambda: jetmetUncertaintiesProducer(
+    "2023_Summer23", "Summer23Prompt23_V1_MC", jerTag="Summer23Prompt23_RunCv1234_JRV1_MC", jetType="AK8PFPuppi")
+
+jetmetUncertaintiesUL2023BPix = lambda: jetmetUncertaintiesProducer(
+    "2023_Summer23BPix", "Summer23BPixPrompt23_V1_MC", jerTag="Summer23BPixPrompt23_RunD_JRV1_MC", jetType="AK4PFPuppi")
+
+jetmetUncertaintiesUL2023BPix_fj = lambda: jetmetUncertaintiesProducer(
+    "2023_Summer23BPix", "Summer23BPixPrompt23_V1_MC", jerTag="Summer23BPixPrompt23_RunD_JRV1_MC", jetType="AK8PFPuppi")
