@@ -5,6 +5,7 @@ import subprocess
 
 from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetmetUncertaintiesProducer import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.jme.fatJetUncertainties import *
+from PhysicsTools.NanoAODTools.postprocessing.modules.jme.jetvetomapProducer import *
 
 # JEC dict
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/JECDataMC#Recommended_for_MC for run2UL
@@ -127,7 +128,31 @@ jmsValues = {
     'UL2018': [1.000, 1.000, 1.000],  # placeholder
 }
 """
+pogdirmap={"UL2016_preVFP":"2016preVFP_UL",
+               "UL2016":"2016postVFP_UL",
+               "UL2017":"2017_UL",
+               "UL2018":"2018_UL",
+               "2022": "2022_Summer22",
+               "2022EE": "2022_Summer22EE",
+               "2023": "2023_Summer23",
+               "2023BPix": "2023_Summer23BPix",
+              }
 
+jetvetomap_map={"UL2016_preVFP":"Summer19UL16_V0",
+               "UL2016":"Summer19UL16_V0",
+               "UL2017":"Summer19UL17_V1",
+               "UL2018":"Summer19UL18_V1",
+               "2022": "Summer22_23Sep2023_RunCD_V1",
+               "2022EE": "Summer22EE_23Sep2023_RunEFG_V1",
+               "2023": "Summer23Prompt23_RunC_V1",
+               "2023BPix": "Summer23BPixPrompt23_RunD_V1",
+              }
+
+def createJetmapveto(isMC, datayear):
+    datayear = str(datayear)
+    jetmapveto = lambda: jetvetomapProducer(isMC, pogdirmap[datayear], jetvetomap_map[datayear])
+    return jetmapveto
+        
 
 def createJMECorrector(isMC=True,
                        dataYear=2016,
@@ -141,16 +166,8 @@ def createJMECorrector(isMC=True,
                        saveMETUncs=['T1', 'T1Smear']):
 
     dataYear = str(dataYear)
+        
     
-    pogdirmap={"UL2016_preVFP":"2016preVFP_UL",
-               "UL2016":"2016postVFP_UL",
-               "UL2017":"2017_UL",
-               "UL2018":"2018_UL",
-               "2022": "2022_Summer22",
-               "2022EE": "2022_Summer22EE",
-               "2023": "2023_Summer23",
-               "2023BPix": "2023_Summer23BPix",
-              }
 
     if isMC:
         jecTag_ = jecTagsMC[dataYear]

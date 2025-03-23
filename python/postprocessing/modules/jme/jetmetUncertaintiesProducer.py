@@ -478,10 +478,6 @@ class jetmetUncertaintiesProducer(Module):
                 jet_pt_L1L2L3 = jet_pt_noMuL1L2L3 + muon_pt
                 jet_pt_L1 = jet_pt_noMuL1 + muon_pt
 
-
-
-            
-
             jet_mass_nom = jet_pt_jerNomVal * jet_mass if self.applySmearing else jet_mass
             if jet_mass_nom < 0.0:
                 jet_mass_nom *= -1.0
@@ -534,8 +530,7 @@ class jetmetUncertaintiesProducer(Module):
                         jets_pt_jerUp[jerID].append(jet_pt_jerUp[jerID])
                         jets_pt_jerDown[jerID].append(jet_pt_jerDown[jerID])
                         jets_mass_jerUp[jerID].append(jet_mass_jerUp[jerID])
-                        jets_mass_jerDown[jerID].append(
-                            jet_mass_jerDown[jerID])
+                        jets_mass_jerDown[jerID].append(jet_mass_jerDown[jerID])
 
                 for jesUncertainty in self.jesUncertainties:
                     # cf. https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#JetCorUncertainties
@@ -549,6 +544,7 @@ class jetmetUncertaintiesProducer(Module):
                     uncertainty_jetType = self.jetType
                     if "AK8" in uncertainty_jetType:
                         uncertainty_jetType = self.replacement_jetType
+                    #JES uncertainty not available for AK8
                     
                     key = "{}_{}_{}".format(self.jecTag, jesUncertainty, uncertainty_jetType)
                     sf = self.cset[key]
@@ -734,6 +730,7 @@ class jetmetUncertaintiesProducer(Module):
                     jets_pt_jerDown[jerID])
 
         if "AK4" in self.jetType:
+            #main MET T1 correction output
             self.out.fillBranch("%s_T1_pt" % self.metBranchName,
                                 math.sqrt(met_T1_px**2 + met_T1_py**2))
             self.out.fillBranch("%s_T1_phi" % self.metBranchName,
