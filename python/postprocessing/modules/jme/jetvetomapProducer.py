@@ -48,7 +48,29 @@ class jetvetomapProducer(Module):
         - jet EM fraction (charged + neutral) < 0.9
         - jets that don't overlap with PF muon (dR < 0.2)
         '''
+        def hem1516veto(jets):
+            for i, jet in enumerate(jets): # -3.2<eta<-1.3 and -1.57<phi< -0.87
+                phi = self.fixPhi(jet.phi)
+                if (jet.eta > -3.2) and (jet.eta < -1.3) and (phi > -1.57) and (phi < -0.87):
+                    if (jet.pt> 15 and (jet.jetId ==2 or jet.jetId ==6) and (jet.chEmEF + jet.neEmEF)<0.9 and jet.muonIdx1 == -1 and jet.muonIdx2 == -1):
+                        #veto!
+                        #print('veto from HEM1516')
+                        return True
+            return False
+        
+        #print(event.run)
         jets = Collection(event, "Jet")
+        if '18' in self.corrName and True: #HEM15/16
+            if self.isMC == False:
+                if int(event.run) >=319077:
+                    is_veto = hem1516veto(jets)
+                    if is_veto: return False #veto event
+            else: #MC
+                #apply veto to 64.7% of MC
+                if int(event.event)%100<65:
+                    is_veto = hem1516veto(jets)
+                    if is_veto: return False #veto event
+        
         
         if '16' in self.corrName or '17' in self.corrName or '18' in self.corrName:
             jets_veto_flag = []
