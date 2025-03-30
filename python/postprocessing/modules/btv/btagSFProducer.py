@@ -11,7 +11,7 @@ class btagSFProducer(Module):
 
     def __init__(
             self, era, algo='deepJet', selectedWPs=['M', 'shape_corr'],
-            sfFileName=None, verbose=0, jesSystsForShape=["jes"]
+            sfFileName=None, verbose=0, jesUncert='Total'
     ):
         #algo = 'deepJet' or 'deepCSV'
         
@@ -35,7 +35,11 @@ class btagSFProducer(Module):
         self.algo = algo
         self.selectedWPs = selectedWPs
         self.verbose = verbose
-        self.jesSystsForShape = jesSystsForShape
+        if jesUncert == 'Total':
+            self.jesSystsForShape = ["jes"]
+        else:
+            self.jesSystsForShape = ["jes"] + [f"jes{s}" for s in jesUncert.split(",")]
+        print('btagSources\n', self.jesSystsForShape)
         # CV: Return value of BTagCalibrationReader::eval_auto_bounds() is zero
         # in case jet abs(eta) > 2.4 !!
         self.max_abs_eta = 2.4
@@ -80,7 +84,7 @@ class btagSFProducer(Module):
                     branchNames[central_or_syst] = baseBranchName + \
                         '_' + central_or_syst
             self.branchNames_central_and_systs[wp] = branchNames
-            
+        
         self.discr = None
         if self.algo == "deepCSV":
             self.discr = "btagDeepB"

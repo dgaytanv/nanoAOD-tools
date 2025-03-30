@@ -55,30 +55,14 @@ __archiveTagsDATA = {
 # https://cms-jerc.web.cern.ch/Recommendations/#run-3 for run3
 # NOT NEEDED: data/mc in nanoaod has JEC applied already. we only need JEC for mc for syst variations.
 jecTagsDATA = {
-    '2016B': 'Summer16_07Aug2017BCD_V11_DATA',
-    '2016C': 'Summer16_07Aug2017BCD_V11_DATA',
-    '2016D': 'Summer16_07Aug2017BCD_V11_DATA',
-    '2016E': 'Summer16_07Aug2017EF_V11_DATA',
-    '2016F': 'Summer16_07Aug2017EF_V11_DATA',
-    '2016G': 'Summer16_07Aug2017GH_V11_DATA',
-    '2016H': 'Summer16_07Aug2017GH_V11_DATA',
-    '2017B': 'Fall17_17Nov2017B_V32_DATA',
-    '2017C': 'Fall17_17Nov2017C_V32_DATA',
-    '2017D': 'Fall17_17Nov2017DE_V32_DATA',
-    '2017E': 'Fall17_17Nov2017DE_V32_DATA',
-    '2017F': 'Fall17_17Nov2017F_V32_DATA',
-    '2018A': 'Autumn18_RunA_V19_DATA',
-    '2018B': 'Autumn18_RunB_V19_DATA',
-    '2018C': 'Autumn18_RunC_V19_DATA',
-    '2018D': 'Autumn18_RunD_V19_DATA',
-    'UL2016_preVFPB': 'Summer19UL16APV_RunBCD_V7_DATA',
-    'UL2016_preVFPC': 'Summer19UL16APV_RunBCD_V7_DATA',
-    'UL2016_preVFPD': 'Summer19UL16APV_RunBCD_V7_DATA',
-    'UL2016_preVFPE': 'Summer19UL16APV_RunEF_V7_DATA',
-    'UL2016_preVFPF': 'Summer19UL16APV_RunEF_V7_DATA',
-    'UL2016F': 'Summer19UL16_RunFGH_V7_DATA',
-    'UL2016G': 'Summer19UL16_RunFGH_V7_DATA',
-    'UL2016H': 'Summer19UL16_RunFGH_V7_DATA',
+    'UL2016_preVFPBCD': 'Summer19UL16APV_RunBCD_V7_DATA',
+    #'UL2016_preVFPC': 'Summer19UL16APV_RunBCD_V7_DATA',
+    #'UL2016_preVFPD': 'Summer19UL16APV_RunBCD_V7_DATA',
+    'UL2016_preVFPEF': 'Summer19UL16APV_RunEF_V7_DATA',
+    #'UL2016_preVFPF': 'Summer19UL16APV_RunEF_V7_DATA',
+    'UL2016FGH': 'Summer19UL16_RunFGH_V7_DATA',
+    #'UL2016G': 'Summer19UL16_RunFGH_V7_DATA',
+    #'UL2016H': 'Summer19UL16_RunFGH_V7_DATA',
     'UL2017B': 'Summer19UL17_RunB_V5_DATA',
     'UL2017C': 'Summer19UL17_RunC_V5_DATA',
     'UL2017D': 'Summer19UL17_RunD_V5_DATA',
@@ -93,6 +77,8 @@ jecTagsDATA = {
     '2022EEE': 'Summer22EE_22Sep2023_V2_DATA',
     '2022EEF': 'Summer22EE_22Sep2023_V2_DATA',
     '2022EEG': 'Summer22EE_22Sep2023_V2_DATA',
+    '2023C': 'Summer23Prompt23_RunCv4_V1_DATA',
+    '2023BPixD': 'Summer23BPixPrompt23_RunD_V1_DATA'
 }
 
 
@@ -174,7 +160,11 @@ def createJMECorrector(isMC=True,
     else:
         jecTag_ = jecTagsDATA[dataYear + runPeriod]
 
-    jmeUncert_ = [x for x in jesUncert.split(",")]
+    if jesUncert!="Total":
+        jmeUncert_ = [x for x in jesUncert.split(",")] + ["Total"]
+    else:
+        jmeUncert_ = ["Total"]
+    
     jerTag_ = jerTagsMC[dataYear]
     #jmrValues_ = jmrValues[dataYear]
     #jmsValues_ = jmsValues[dataYear]
