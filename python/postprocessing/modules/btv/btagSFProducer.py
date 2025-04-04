@@ -11,9 +11,10 @@ class btagSFProducer(Module):
 
     def __init__(
             self, era, algo='deepJet', selectedWPs=['M', 'shape_corr'],
-            sfFileName=None, verbose=0, jesUncert='Total'
+            sfFileName=None, verbose=0, jesUncert='Total', mode='default',
     ):
         #algo = 'deepJet' or 'deepCSV'
+        self.mode = mode
         
         eramap = {"UL2016_preVFP": "2016preVFP_UL",
                    "UL2016":"2016postVFP_UL",
@@ -39,7 +40,7 @@ class btagSFProducer(Module):
             self.jesSystsForShape = ["jes"]
         else:
             self.jesSystsForShape = ["jes"] + [f"jes{s}" for s in jesUncert.split(",")]
-        print('btagSources\n', self.jesSystsForShape)
+        
         # CV: Return value of BTagCalibrationReader::eval_auto_bounds() is zero
         # in case jet abs(eta) > 2.4 !!
         self.max_abs_eta = 2.4
@@ -52,27 +53,42 @@ class btagSFProducer(Module):
 
         # define systematic uncertainties
         
-        self.central_and_systs = ["central", "up", "down"]
-
-        self.systs_shape_corr_bjet = []
-        for syst in ['lf', 'hf',
-                     'hfstats1', 'hfstats2',
-                     'lfstats1', 'lfstats2'] + self.jesSystsForShape:
-            self.systs_shape_corr_bjet.append("up_%s" % syst)
-            self.systs_shape_corr_bjet.append("down_%s" % syst)
         
-        self.central_and_systs_shape_corr_common = ["central"]
+
+        
+        if self.mode == "default":
+            self.systs_shape_corr_bjet = []
+            for syst in ['lf', 'hf',
+                         'hfstats1', 'hfstats2',
+                         'lfstats1', 'lfstats2']:
+                self.systs_shape_corr_bjet.append("up_%s" % syst)
+                self.systs_shape_corr_bjet.append("down_%s" % syst)
+            self.central_and_systs_shape_corr_common = ["central"]
+            self.systs_shape_corr_cjet = ['up_cferr1','down_cferr1', 'up_cferr2','down_cferr2']
+            self.central_and_systs = ["central", "up", "down"]
+            self.systs_shape_jes_bjet = []
+        elif self.mode == "jes":
+            self.systs_shape_corr_bjet = []
+            self.central_and_systs_shape_corr_common = []
+            self.systs_shape_corr_cjet = []
+            self.central_and_systs = []
+            self.systs_shape_jes_bjet = []
+            for syst in self.jesSystsForShape:
+                self.systs_shape_jes_bjet.append("up_%s" % syst)
+                self.systs_shape_jes_bjet.append("down_%s" % syst)
+        else: raise RuntimeException
+    
+        
         #for syst in self.jesSystsForShape:
         #    self.central_and_systs_shape_corr_common.append("up_%s" % syst)
         #    self.central_and_systs_shape_corr_common.append("down_%s" % syst)
-        
-        self.systs_shape_corr_cjet = ['up_cferr1','down_cferr1', 'up_cferr2','down_cferr2']
 
         self.branchNames_central_and_systs = {}
         for wp in self.selectedWPs:
             branchNames = {}
             if wp == 'shape_corr':
-                central_and_systs = self.central_and_systs_shape_corr_common + self.systs_shape_corr_bjet + self.systs_shape_corr_cjet
+                central_and_systs = self.central_and_systs_shape_corr_common + self.systs_shape_corr_bjet + self.systs_shape_jes_bjet + self.systs_shape_corr_cjet
+                print('btagSysts\n', central_and_systs)
                 baseBranchName = 'Jet_btagSF_{}_shape'.format(self.algo.lower())
             else:
                 central_and_systs = self.central_and_systs
@@ -112,6 +128,9 @@ class btagSFProducer(Module):
     
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+        if self.mode == "jes" and event.Eventflag_do_syst == 0:
+            return True
+            
         jets = Collection(event, "Jet")
         jet_flav = np.array([jet.hadronFlavour for jet in jets])
         jet_pt = np.array([jet.pt for jet in jets])
@@ -136,7 +155,7 @@ class btagSFProducer(Module):
                     sfs[np.where(sfs < 0.01)] = 1.0
                     self.out.fillBranch(self.branchNames_central_and_systs[wp][central_or_syst], list(sfs))
                     
-                for central_or_syst in self.systs_shape_corr_bjet:
+                for central_or_syst in self.systs_shape_corr_bjet + self.systs_shape_jes_bjet + self.systs_shape_jes_bjet:
                     sfs = np.ones_like(jet_pt)
                     sfs[c_jets] = self.calibration[self.algo + "_shape"].evaluate("central", jet_flav[c_jets], jet_eta[c_jets], jet_pt[c_jets], jet_disc[c_jets])
                     sfs[non_c_jets] = self.calibration[self.algo + "_shape"].evaluate(central_or_syst, jet_flav[non_c_jets], jet_eta[non_c_jets], jet_pt[non_c_jets], jet_disc[non_c_jets])

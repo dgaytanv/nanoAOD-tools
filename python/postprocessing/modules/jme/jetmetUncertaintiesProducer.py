@@ -27,7 +27,8 @@ class jetmetUncertaintiesProducer(Module):
                  isData=False,
                  applySmearing=True,
                  splitJER=False,
-                 saveMETUncs=['T1', 'T1Smear']
+                 saveMETUncs=['T1', 'T1Smear'],
+                 mode='default'
      ):
 
         if "16" in era or "17" in era or "18" in era: #run2
@@ -66,8 +67,14 @@ class jetmetUncertaintiesProducer(Module):
         # factors and uncertainties yet
         # --------------------------------------------------------------------
 
-        self.jesUncertainties = jesUncertainties
+        self.mode = mode
+        if mode == 'default':
+            self.jesUncertainties = [] #or ['Total']
+        else:
+            self.jesUncertainties = jesUncertainties
+        print('jetmetUncertaintiesProducer jesUncertainties:\n', self.jesUncertainties)
 
+        
         # Calculate and save uncertainties on T1Smear MET if this flag is set
         # to True. Otherwise calculate and save uncertainties on T1 MET
         self.saveMETUncs = saveMETUncs
@@ -253,6 +260,12 @@ class jetmetUncertaintiesProducer(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail,
         go to next event)"""
+        
+        local_jesuncertainties = self.jesUncertainties
+        if self.mode!='default':
+            if event.Eventflag_do_syst == 0:
+                return True
+        
         jets = Collection(event, self.jetBranchName)
         if "AK4" in self.jetType:
             nJet = event.nJet
@@ -305,7 +318,7 @@ class jetmetUncertaintiesProducer(Module):
             jets_mass_jerUp[jerID] = []
             jets_mass_jerDown[jerID] = []
 
-        for jesUncertainty in self.jesUncertainties:
+        for jesUncertainty in local_jesuncertainties:
             jets_pt_jesUp[jesUncertainty] = []
             jets_pt_jesDown[jesUncertainty] = []
             jets_mass_jesUp[jesUncertainty] = []
@@ -349,7 +362,7 @@ class jetmetUncertaintiesProducer(Module):
             if 'T1' in self.saveMETUncs:
                 (met_T1_px_jesUp, met_T1_py_jesUp) = ({}, {})
                 (met_T1_px_jesDown, met_T1_py_jesDown) = ({}, {})
-                for jesUncertainty in self.jesUncertainties:
+                for jesUncertainty in local_jesuncertainties:
                     met_T1_px_jesUp[jesUncertainty] = met_px
                     met_T1_py_jesUp[jesUncertainty] = met_py
                     met_T1_px_jesDown[jesUncertainty] = met_px
@@ -357,7 +370,7 @@ class jetmetUncertaintiesProducer(Module):
             if 'T1Smear' in self.saveMETUncs:
                 (met_T1Smear_px_jesUp, met_T1Smear_py_jesUp) = ({}, {})
                 (met_T1Smear_px_jesDown, met_T1Smear_py_jesDown) = ({}, {})
-                for jesUncertainty in self.jesUncertainties:
+                for jesUncertainty in local_jesuncertainties:
                     met_T1Smear_px_jesUp[jesUncertainty] = met_px
                     met_T1Smear_py_jesUp[jesUncertainty] = met_py
                     met_T1Smear_px_jesDown[jesUncertainty] = met_px
@@ -532,8 +545,8 @@ class jetmetUncertaintiesProducer(Module):
                         jets_mass_jerUp[jerID].append(jet_mass_jerUp[jerID])
                         jets_mass_jerDown[jerID].append(jet_mass_jerDown[jerID])
 
-                for jesUncertainty in self.jesUncertainties:
-                    # cf. https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#JetCorUncertainties
+                for jesUncertainty in local_jesuncertainties:
+                     # cf. https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#JetCorUncertainties
                     # cf. https://hypernews.cern.ch/HyperNews/CMS/get/JetMET/2000.html
                     #self.jesUncertainty[jesUncertainty].setJetPt(
                     #    jet_pt_nom)
@@ -630,7 +643,7 @@ class jetmetUncertaintiesProducer(Module):
                                               jet_pt_L1) * jet_sinPhi
 
                             # Calculate JES uncertainties on unsmeared MET
-                            for jesUncertainty in self.jesUncertainties:
+                            for jesUncertainty in local_jesuncertainties:
                                 met_T1_px_jesUp[
                                     jesUncertainty] = met_T1_px_jesUp[
                                         jesUncertainty] - (
@@ -676,7 +689,7 @@ class jetmetUncertaintiesProducer(Module):
                                         jet_pt_L1) * jet_sinPhi
 
                             # Calculate JES uncertainties on smeared MET
-                            for jesUncertainty in self.jesUncertainties:
+                            for jesUncertainty in local_jesuncertainties:
                                 jesUp_correction_forT1SmearMET = (
                                     jet_pt_L1L2L3 * jet_pt_jerNomVal -
                                     jet_pt_L1) + (
@@ -797,7 +810,7 @@ class jetmetUncertaintiesProducer(Module):
                             math.atan2(met_T1Smear_py_jerDown[jerID],
                                        met_T1Smear_px_jerDown[jerID]))
 
-            for jesUncertainty in self.jesUncertainties:
+            for jesUncertainty in local_jesuncertainties:
                 self.out.fillBranch(
                     "%s_pt_jes%sUp" % (self.jetBranchName, jesUncertainty),
                     jets_pt_jesUp[jesUncertainty])

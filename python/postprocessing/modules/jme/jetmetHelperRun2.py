@@ -124,8 +124,8 @@ pogdirmap={"UL2016_preVFP":"2016preVFP_UL",
                "2023BPix": "2023_Summer23BPix",
               }
 
-jetvetomap_map={"UL2016_preVFP":"Summer19UL16_V0",
-               "UL2016":"Summer19UL16_V0",
+jetvetomap_map={"UL2016_preVFP":"Summer19UL16_V1",
+               "UL2016":"Summer19UL16_V1",
                "UL2017":"Summer19UL17_V1",
                "UL2018":"Summer19UL18_V1",
                "2022": "Summer22_23Sep2023_RunCD_V1",
@@ -149,7 +149,8 @@ def createJMECorrector(isMC=True,
                        metBranchName="MET",
                        applySmearing=True,
                        splitJER=False,
-                       saveMETUncs=['T1', 'T1Smear']):
+                       saveMETUncs=['T1', 'T1Smear'],
+                       mode='default'):
 
     dataYear = str(dataYear)
         
@@ -185,7 +186,8 @@ def createJMECorrector(isMC=True,
                 metBranchName=met_,
                 applySmearing=applySmearing,
                 splitJER=splitJER,
-                saveMETUncs=saveMETUncs)
+                saveMETUncs=saveMETUncs,
+                mode=mode)
         else:
             jmeCorrections = lambda: jetmetUncertaintiesProducer(
                 era=pogdirmap[dataYear],
@@ -196,7 +198,7 @@ def createJMECorrector(isMC=True,
                 metBranchName=met_,
                 isData=True)
     # no MET variations calculated
-    else:
+    else: #fatjet
         if isMC:
             #jmeCorrections = lambda: fatJetUncertaintiesProducer(
             #    era=dataYear,
@@ -218,7 +220,8 @@ def createJMECorrector(isMC=True,
                 metBranchName=met_,
                 applySmearing=applySmearing,
                 splitJER=splitJER,
-                saveMETUncs=saveMETUncs)
+                saveMETUncs=saveMETUncs,
+                mode=mode)
         else:
             #jmeCorrections = lambda: fatJetUncertaintiesProducer(
             #    era=dataYear,
