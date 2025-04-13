@@ -107,7 +107,10 @@ class JetReCalibrator:
                 else:
                     sf = self.cset[key]
                 if l == "L1L2L3Res" or l=="L1FastJet":
-                    inputs=[jet.area, jet.eta, jet.pt * raw, rho]
+                    if '23BPix' in self.globalTag:
+                        inputs=[jet.area, jet.eta, jet.phi, jet.pt * raw, rho]
+                    else:
+                        inputs=[jet.area, jet.eta, jet.pt * raw, rho]
                 else:
                     inputs=[jet.eta, jet.pt * raw]
                 corr *= float(sf.evaluate(*inputs))

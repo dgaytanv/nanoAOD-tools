@@ -55,7 +55,7 @@ class Module(object):
 
 def eventLoop(
         modules, inputFile, outputFile, inputTree, wrappedOutputTree,
-        maxEvents=-1, eventRange=None, progress=(10000, sys.stdout),
+        maxEvents=-1, eventRange=None, progress=(1000, sys.stdout),
         filterOutput=True
 ):
     for m in modules:
