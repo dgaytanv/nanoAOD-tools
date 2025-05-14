@@ -39,18 +39,7 @@ jerTagsMC = {
     '2023BPix': 'Summer23BPixPrompt23_RunD_JRV1_MC',
 }
 
-# https://twiki.cern.ch/twiki/bin/viewauth/CMS/JECDataMC#Recommended_for_Data
-comment_out="""
-__archiveTagsDATA = {
-    '2016': 'Summer16_07Aug2017_V11_DATA',
-    '2017': 'Fall17_17Nov2017_V32_DATA',
-    '2018': 'Autumn18_V19_DATA',
-    'UL2016_preVFP': 'Summer19UL16APV_V7_DATA',
-    'UL2016': 'Summer19UL16_V7_DATA',
-    'UL2017': 'Summer19UL17_V5_DATA',
-    'UL2018': 'Summer19UL18_V5_DATA'
-}
-"""
+
 
 # https://cms-jerc.web.cern.ch/Recommendations/#run-3 for run3
 # NOT NEEDED: data/mc in nanoaod has JEC applied already. we only need JEC for mc for syst variations.
@@ -72,11 +61,11 @@ jecTagsDATA = {
     'UL2018B': 'Summer19UL18_RunB_V5_DATA',
     'UL2018C': 'Summer19UL18_RunC_V5_DATA',
     'UL2018D': 'Summer19UL18_RunD_V5_DATA',
-    '2022C': 'Summer22_22Sep2023_V2_DATA',
-    '2022D': 'Summer22_22Sep2023_V2_DATA',
-    '2022EEE': 'Summer22EE_22Sep2023_V2_DATA',
-    '2022EEF': 'Summer22EE_22Sep2023_V2_DATA',
-    '2022EEG': 'Summer22EE_22Sep2023_V2_DATA',
+    '2022C': 'Summer22_22Sep2023_RunCD_V2_DATA',
+    '2022D': 'Summer22_22Sep2023_RunCD_V2_DATA',
+    '2022EEE': 'Summer22EE_22Sep2023_RunE_V2_DATA',
+    '2022EEF': 'Summer22EE_22Sep2023_RunF_V2_DATA',
+    '2022EEG': 'Summer22EE_22Sep2023_RunG_V2_DATA',
     '2023C': 'Summer23Prompt23_RunCv4_V1_DATA',
     '2023BPixD': 'Summer23BPixPrompt23_RunD_V1_DATA'
 }
@@ -84,36 +73,7 @@ jecTagsDATA = {
 
 
 
-# jet mass resolution: https://twiki.cern.ch/twiki/bin/view/CMS/JetWtagging
-#nominal, up, down
-comment_out="""
-jmrValues = {
-    '2016': [1.0, 1.2, 0.8],
-    '2017': [1.09, 1.14, 1.04],
-    # Use 2017 values for 2018 until 2018 are released
-    '2018': [1.09, 1.14, 1.04],
-    'UL2016_preVFP': [1.00, 1.00, 1.00],  # placeholder
-    'UL2016': [1.00, 1.00, 1.00],  # placeholder
-    'UL2017': [1.00, 1.00, 1.00],  # placeholder
-    'UL2018': [1.00, 1.00, 1.00],  # placeholder
-}
-"""
 
-# jet mass scale
-# W-tagging PUPPI softdrop JMS values: https://twiki.cern.ch/twiki/bin/view/CMS/JetWtagging
-# 2016 values
-comment_out="""
-jmsValues = {
-    '2016': [1.00, 0.9906, 1.0094],  # nominal, down, up
-    '2017': [0.982, 0.978, 0.986],
-    # Use 2017 values for 2018 until 2018 are released
-    '2018': [0.982, 0.978, 0.986],
-    'UL2016_preVFP': [1.000, 1.000, 1.000],  # placeholder
-    'UL2016': [1.000, 1.000, 1.000],  # placeholder
-    'UL2017': [1.000, 1.000, 1.000],  # placeholder
-    'UL2018': [1.000, 1.000, 1.000],  # placeholder
-}
-"""
 pogdirmap={"UL2016_preVFP":"2016preVFP_UL",
                "UL2016":"2016postVFP_UL",
                "UL2017":"2017_UL",
@@ -249,3 +209,45 @@ def createJMECorrector(isMC=True,
 #jmeCorrections = createJMECorrector(False, "2016", "B", "Total", True, "AK4PFchs", False)
 # include jmeCorrections() in the list of modules to run.
 ###
+# https://twiki.cern.ch/twiki/bin/viewauth/CMS/JECDataMC#Recommended_for_Data
+comment_out="""
+__archiveTagsDATA = {
+    '2016': 'Summer16_07Aug2017_V11_DATA',
+    '2017': 'Fall17_17Nov2017_V32_DATA',
+    '2018': 'Autumn18_V19_DATA',
+    'UL2016_preVFP': 'Summer19UL16APV_V7_DATA',
+    'UL2016': 'Summer19UL16_V7_DATA',
+    'UL2017': 'Summer19UL17_V5_DATA',
+    'UL2018': 'Summer19UL18_V5_DATA'
+}
+"""
+# jet mass resolution: https://twiki.cern.ch/twiki/bin/view/CMS/JetWtagging
+#nominal, up, down
+comment_out="""
+jmrValues = {
+    '2016': [1.0, 1.2, 0.8],
+    '2017': [1.09, 1.14, 1.04],
+    # Use 2017 values for 2018 until 2018 are released
+    '2018': [1.09, 1.14, 1.04],
+    'UL2016_preVFP': [1.00, 1.00, 1.00],  # placeholder
+    'UL2016': [1.00, 1.00, 1.00],  # placeholder
+    'UL2017': [1.00, 1.00, 1.00],  # placeholder
+    'UL2018': [1.00, 1.00, 1.00],  # placeholder
+}
+"""
+
+# jet mass scale
+# W-tagging PUPPI softdrop JMS values: https://twiki.cern.ch/twiki/bin/view/CMS/JetWtagging
+# 2016 values
+comment_out="""
+jmsValues = {
+    '2016': [1.00, 0.9906, 1.0094],  # nominal, down, up
+    '2017': [0.982, 0.978, 0.986],
+    # Use 2017 values for 2018 until 2018 are released
+    '2018': [0.982, 0.978, 0.986],
+    'UL2016_preVFP': [1.000, 1.000, 1.000],  # placeholder
+    'UL2016': [1.000, 1.000, 1.000],  # placeholder
+    'UL2017': [1.000, 1.000, 1.000],  # placeholder
+    'UL2018': [1.000, 1.000, 1.000],  # placeholder
+}
+"""
