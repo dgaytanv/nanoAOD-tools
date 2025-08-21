@@ -1,6 +1,6 @@
 from __future__ import print_function
 from PhysicsTools.NanoAODTools.postprocessing.framework.eventloop import Module
-from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection
+from PhysicsTools.NanoAODTools.postprocessing.framework.datamodel import Collection, Object
 import os
 import numpy as np
 import correctionlib
@@ -87,7 +87,7 @@ class jetvetomapProducer(Module):
             return True #add veto flag to jets but don't veto events
         
         else:
-            
+
             veto_flag = 0
             for i, jet in enumerate(jets):
                 if (jet.pt> 15 and (jet.jetId ==2 or jet.jetId ==6) and (jet.chEmEF + jet.neEmEF)<0.9 and jet.muonIdx1 == -1 and jet.muonIdx2 == -1):
@@ -100,6 +100,20 @@ class jetvetomapProducer(Module):
                         veto_flag = 1  # Set flag if a vetoed jet is found
                         break  # Break out of the loop since we only need one veto to trigger
             # Fill the branch with the veto result
+            
+            if veto_flag == 0:
+                #Flag_ecalBadCalibFilter recipe https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFiltersRun2#Run_3_2022_and_2023_data_and_MC
+                if not self.isMC and int(event.run)>=362433 and int(event.run)<367144:
+                    puppimet = Object(event,"PuppiMET")
+                    if puppimet.pt > 100:
+                        for i, jet in enumerate(jets):
+                            phi = self.fixPhi(jet.phi)
+                            if (jet.pt>50) and (jet.eta>-0.5) and (jet.eta<-0.1) and (phi>-2.1) and (phi<-1.8) and \
+                            ((jet.chEmEF>0.9) or (jet.neEmEF>0.9)) and\
+                            abs(phi - puppimet.phi)>2.9:
+                                veto_flag = 1
+                                break
+            
             self.out.fillBranch("Flag_JetVetoed", veto_flag)
             if veto_flag == 0:
                 return True
