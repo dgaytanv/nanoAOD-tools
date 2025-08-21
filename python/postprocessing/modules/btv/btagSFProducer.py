@@ -66,17 +66,19 @@ class btagSFProducer(Module):
             self.central_and_systs_shape_corr_common = ["central"]
             self.systs_shape_corr_cjet = ['up_cferr1','down_cferr1', 'up_cferr2','down_cferr2']
             self.central_and_systs = ["central", "up", "down"]
-            self.systs_shape_jes_bjet = []
         elif self.mode == "jes":
             self.systs_shape_corr_bjet = []
             self.central_and_systs_shape_corr_common = []
             self.systs_shape_corr_cjet = []
             self.central_and_systs = []
-            self.systs_shape_jes_bjet = []
-            for syst in self.jesSystsForShape:
-                self.systs_shape_jes_bjet.append("up_%s" % syst)
-                self.systs_shape_jes_bjet.append("down_%s" % syst)
-        else: raise RuntimeException
+        else: 
+            raise RuntimeException
+            
+        self.systs_shape_jes_bjet = []
+        for syst in self.jesSystsForShape:
+            self.systs_shape_jes_bjet.append("up_%s" % syst)
+            self.systs_shape_jes_bjet.append("down_%s" % syst)
+        
     
         
         #for syst in self.jesSystsForShape:
