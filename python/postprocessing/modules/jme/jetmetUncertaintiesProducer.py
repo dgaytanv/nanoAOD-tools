@@ -69,7 +69,7 @@ class jetmetUncertaintiesProducer(Module):
 
         self.mode = mode
         if mode == 'default':
-            self.jesUncertainties = [] #or ['Total']
+            self.jesUncertainties = ['Total']
         else:
             self.jesUncertainties = jesUncertainties
         print('jetmetUncertaintiesProducer jesUncertainties:\n', self.jesUncertainties)
@@ -283,6 +283,8 @@ class jetmetUncertaintiesProducer(Module):
                 jet.neEmEF = 0
                 jet.chEmEF = 0
             
+        if self.isData:
+            run_number = int(event.run)
             
         if not self.isData:
             genJets = Collection(event, self.genJetBranchName)
@@ -326,8 +328,14 @@ class jetmetUncertaintiesProducer(Module):
             
         if "AK4" in self.jetType:
 
-            met = Object(event, self.metBranchName)
-            rawmet = Object(event, "RawMET")
+            if self.run == 2:
+                met = Object(event, "MET")
+                rawmet = Object(event, "RawMET")
+            else:
+                met = Object(event, "PuppiMET")
+                rawmet = Object(event, "RawPuppiMET")                
+            
+            
             if "Puppi" in self.metBranchName:
                 rawmet = Object(event, "RawPuppiMET")
             defmet = Object(event, "MET")
@@ -432,8 +440,12 @@ class jetmetUncertaintiesProducer(Module):
                 jet_rawpt = -1.0 * jet_pt  # If factor not present factor will be saved as -1
                 jet_rawmass = -1.0 * jet_mass  # If factor not present factor will be saved as -1
 
-            (jet_pt, jet_mass) = self.jetReCalibrator.correct(jet, rho)
-            (jet_pt_l1, jet_mass_l1) = self.jetReCalibratorL1.correct(jet, rho)
+            if not self.isData:
+                (jet_pt, jet_mass) = self.jetReCalibrator.correct(jet, rho)
+                (jet_pt_l1, jet_mass_l1) = self.jetReCalibratorL1.correct(jet, rho)
+            else:
+                (jet_pt, jet_mass) = self.jetReCalibrator.correct(jet, rho, run_number)
+                (jet_pt_l1, jet_mass_l1) = self.jetReCalibratorL1.correct(jet, rho, run_number)                
             #print(f'JEC {jet.pt} -> {jet_pt}')
             jet.pt = jet_pt
             jet.mass = jet_mass

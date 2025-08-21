@@ -20,8 +20,8 @@ jecTagsMC = {
     'UL2018': 'Summer19UL18_V5_MC',
     '2022': 'Summer22_22Sep2023_V2_MC',
     '2022EE': 'Summer22EE_22Sep2023_V2_MC',
-    '2023': 'Summer23Prompt23_V1_MC',
-    '2023BPix': 'Summer23BPixPrompt23_V1_MC',
+    '2023': 'Summer23Prompt23_V2_MC',
+    '2023BPix': 'Summer23BPixPrompt23_V3_MC',
 }
 
 # https://twiki.cern.ch/twiki/bin/view/CMS/JetResolution for run2ul
@@ -66,8 +66,8 @@ jecTagsDATA = {
     '2022EEE': 'Summer22EE_22Sep2023_RunE_V2_DATA',
     '2022EEF': 'Summer22EE_22Sep2023_RunF_V2_DATA',
     '2022EEG': 'Summer22EE_22Sep2023_RunG_V2_DATA',
-    '2023C': 'Summer23Prompt23_RunCv4_V1_DATA',
-    '2023BPixD': 'Summer23BPixPrompt23_RunD_V1_DATA'
+    '2023C': 'Summer23Prompt23_V2_DATA',
+    '2023BPixD': 'Summer23BPixPrompt23_V3_DATA'
 }
 
 

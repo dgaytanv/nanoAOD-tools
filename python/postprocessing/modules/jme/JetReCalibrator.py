@@ -82,7 +82,8 @@ class JetReCalibrator:
 
     def correct(self,
                 jet,
-                rho):
+                rho,
+                run_number=None):
         """Corrects a jet energy (optionally shifting it also by delta times
         the JEC uncertainty)
 
@@ -107,8 +108,15 @@ class JetReCalibrator:
                 else:
                     sf = self.cset[key]
                 if l == "L1L2L3Res" or l=="L1FastJet":
-                    if '23BPix' in self.globalTag:
-                        inputs=[jet.area, jet.eta, jet.phi, jet.pt * raw, rho]
+                    if 'Summer23' in self.globalTag:
+                        if '23BPix' in self.globalTag:
+                            inputs=[jet.area, jet.eta,  jet.pt * raw, rho, jet.phi]
+                        else:
+                            inputs=[jet.area, jet.eta, jet.pt * raw, rho]
+                        if 'DATA' in self.globalTag:
+                            if run_number is None:
+                                raise ValueError('run number not provided for 23/23BPix Data JEC')
+                            inputs.append(float(run_number)) #json ask for a float run number...
                     else:
                         inputs=[jet.area, jet.eta, jet.pt * raw, rho]
                 else:
