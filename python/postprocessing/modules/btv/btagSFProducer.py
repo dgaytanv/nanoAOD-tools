@@ -157,7 +157,7 @@ class btagSFProducer(Module):
                     sfs[np.where(sfs < 0.01)] = 1.0
                     self.out.fillBranch(self.branchNames_central_and_systs[wp][central_or_syst], list(sfs))
                     
-                for central_or_syst in self.systs_shape_corr_bjet + self.systs_shape_jes_bjet + self.systs_shape_jes_bjet:
+                for central_or_syst in self.systs_shape_corr_bjet + self.systs_shape_jes_bjet:
                     sfs = np.ones_like(jet_pt)
                     sfs[c_jets] = self.calibration[self.algo + "_shape"].evaluate("central", jet_flav[c_jets], jet_eta[c_jets], jet_pt[c_jets], jet_disc[c_jets])
                     sfs[non_c_jets] = self.calibration[self.algo + "_shape"].evaluate(central_or_syst, jet_flav[non_c_jets], jet_eta[non_c_jets], jet_pt[non_c_jets], jet_disc[non_c_jets])
